@@ -4,7 +4,7 @@ const taskSchema = mongoose.Schema({
   task: {
     type: String,
     required: [true, "Please provide the task"],
-    maxLength: [20, "please the should be within 20 words"],
+    maxLength: [30, "please the should be within 20 words"],
     trim: true,
   },
   completed: {

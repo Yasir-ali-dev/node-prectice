@@ -6,6 +6,7 @@ const app = express();
 const cors = require("cors");
 const connectDB = require("./db/connectDB");
 const errorHandleMiddleware = require("./middlewares/error-handle-middleware");
+const router = require("./routes/user-route");
 
 // external middlewares
 app.use(express.json());
@@ -17,7 +18,7 @@ app.get("/", (req, res) => {
   res.status(200).send("<h2>Authentication with json web tokens <h2>");
 });
 // middlewares
-
+app.use("/api/auth/", router);
 app.use(errorHandleMiddleware);
 
 const port = process.env.PORT;

@@ -1,19 +1,19 @@
 const express = require("express");
 const app = express();
 require("dotenv").config();
+require("express-async-errors");
 const connectDB = require("./db/connectDB");
 const taskRouter = require("./routes/task-router");
-const ErrorHandler = require("./middlewares/error-handler");
-
+const ErrorHandler = require("./middlewares/error-handler.js");
 // middleware
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.send("Task-Manager");
+  res.send("<h1>Task-Manager<h1>");
 });
 
+// middlewares
 app.use("/api/tasks", taskRouter);
-
 app.use(ErrorHandler);
 
 const port = process.env.PORT || 4000;

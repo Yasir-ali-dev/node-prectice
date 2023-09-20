@@ -3,10 +3,12 @@ const {
   getAllTasks,
   createTask,
   getTask,
+  updateTask,
+  deleteTask,
 } = require("../controllers/task-controller");
 const router = express.Router();
 
 router.route("/").get(getAllTasks).post(createTask);
-router.route("/:taskId").get(getTask);
+router.route("/:taskId").get(getTask).delete(deleteTask).patch(updateTask);
 
 module.exports = router;

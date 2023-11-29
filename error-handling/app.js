@@ -5,15 +5,14 @@ const errorHandlerMiddleware = require("./middleware/error-handler");
 const connectDB = require("./db/connect");
 const mongoose = require("mongoose");
 require("express-async-errors");
+const userRouter = require("./routes/user-route");
+const adminRouter = require("./routes/admin-route");
 
 // middlewares
+app.use(express.json());
+app.use("/api/v1/users", userRouter);
+app.use("/api/v1/admin", adminRouter);
 app.use(errorHandlerMiddleware);
-
-//
-const schema = new mongoose.Schema({ name: String });
-console.log(schema.path("name") instanceof mongoose.SchemaType);
-
-//
 
 // connection
 const port = process.env.PORT;

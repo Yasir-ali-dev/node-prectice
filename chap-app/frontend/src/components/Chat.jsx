@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react'
+import ScrollToBottom from 'react-scroll-to-bottom';
+
 
 const Chat = ({room, name , socket }) => {
     const [currentMessage,setCurrentMessage]=useState("");
@@ -12,18 +14,20 @@ const Chat = ({room, name , socket }) => {
                 message : currentMessage,
                 time : new Date(Date.now()).getHours()+":"+new Date(Date.now()).getMinutes()+":"+new Date(Date.now()).getSeconds()
             }
-            await socket.emit("send_message",messageData)
+            await socket.emit("send_message",messageData);
+            setMessageList((list)=> [...list,messageData])
+             
         }
-    }
+        setCurrentMessage("")
+    }   
 
 
     useEffect(()=>{
        socket.on("recieve_message",(messageData)=>{
-        setMessageList((prevMessageList)=>{
-            return [...prevMessageList,messageData.message];
-        })
-       });
-
+        if (messageData.username !== name) {
+            setMessageList((list) => [...list, messageData]);
+          }
+       })
     },[socket])    
 
   return (
@@ -32,12 +36,33 @@ const Chat = ({room, name , socket }) => {
             <p>Live Chat</p>
         </div>
         <div className="chat-body">
+            <ScrollToBottom className='message-container'>
+                
             {messageList.map((_,i)=>{
-                return <h2> {_}</h2>
+                return(
+                    <div className='message' key={i} id={name === _.username ? "you" : "other" }>
+                    <div className='message-content'>
+                        <p>{_.message}</p>
+                    </div>
+                    <div className='message-meta'>
+                        <p id='time'>{_.time}</p>
+                        <p id='author'>{_.username}</p>
+                    </div>
+                    
+                </div>)
             })}
+            </ScrollToBottom>
         </div>
         <div className="chat-footer">
-            <input type="text" placeholder='Hey ...' onChange={(e)=>setCurrentMessage(e.target.value)} />
+            <input 
+                type="text" 
+                placeholder='Hey ...' 
+                onChange={(e)=>setCurrentMessage(e.target.value)}
+                value={currentMessage}
+                onKeyPress={(event) => {
+                    event.key === "Enter" && sendMessage();
+                  }}
+             />
             <button onClick={sendMessage}>&#9658;</button>
         </div>
     </div>

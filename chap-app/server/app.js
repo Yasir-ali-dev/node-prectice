@@ -9,6 +9,7 @@ app.use(cors());
 
 const io = new Server(httpServer, {
   cors: { origin: "http://localhost:3001" },
+  methods: ["GET", "POST"],
 });
 
 io.on("connection", (socket) => {
@@ -18,8 +19,9 @@ io.on("connection", (socket) => {
     socket.join(data);
     console.log(`user joined ${socket.id} with room id ${data}`);
   });
+
   socket.on("send_message", (data) => {
-    socket.to(data.room).emit("recieve_message", data);
+    io.to(data.room).emit("recieve_message", data);
   });
 
   socket.on("disconnect", () => {
